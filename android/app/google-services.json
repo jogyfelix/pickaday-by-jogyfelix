@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "789126152904",
+    "project_id": "pickaday-a0624",
+    "storage_bucket": "pickaday-a0624.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789126152904:android:e903bd5e6526f81a189bfd",
+        "android_client_info": {
+          "package_name": "com.pickaday"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789126152904-l4tduspkuiqv57c42c0tpc6tuq1ru7cl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIYandDulsZuSHgscgCjVaRHDdAlfaC6k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789126152904-l4tduspkuiqv57c42c0tpc6tuq1ru7cl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
