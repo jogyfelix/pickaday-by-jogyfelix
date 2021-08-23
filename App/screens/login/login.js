@@ -252,4 +252,7 @@ const landScapeStyles = StyleSheet.create({
     color: colors.white,
     marginVertical: 12,
   },
+  loadingIndicator: {
+    marginVertical: 10,
+  },
 });
