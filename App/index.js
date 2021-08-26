@@ -1,6 +1,6 @@
 import React from 'react';
-import Navigation from './config/navigation';
+import {MainStackScreen} from './config/navigation';
 
 export default function index() {
-  return <Navigation />;
+  return <MainStackScreen />;
 }

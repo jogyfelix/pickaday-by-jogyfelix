@@ -31,7 +31,7 @@ export default function Login({navigation}) {
   const loginUser = async (userName, password) => {
     try {
       await auth().signInWithEmailAndPassword(userName, password);
-      navigation.push(screenNames.home);
+      navigation.push(screenNames.homeNavigator);
     } catch (error) {
       setLoadingIndicator(false);
       if (error.code === 'auth/user-not-found') {
@@ -46,7 +46,7 @@ export default function Login({navigation}) {
   const newUser = async (userName, password) => {
     try {
       await auth().createUserWithEmailAndPassword(userName, password);
-      navigation.push(screenNames.home);
+      navigation.push(screenNames.homeNavigator);
     } catch (error) {
       setLoadingIndicator(false);
       if (error.code === 'auth/email-already-in-use') {
@@ -117,10 +117,9 @@ export default function Login({navigation}) {
               setLoadingIndicator(true);
               if (noUser) newUser(userName, password);
               else loginUser(userName, password);
+            } else {
+              showShortSnackBar('Please enter email/password');
             }
-            // else {
-            //   Toast.show(strings.ERROR_ALERT);
-            // }
           }}
           style={
             height > width
