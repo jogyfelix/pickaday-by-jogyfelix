@@ -32,6 +32,7 @@ export default function Login({navigation}) {
     try {
       await auth().signInWithEmailAndPassword(userName, password);
       navigation.push(screenNames.homeNavigator);
+      setLoadingIndicator(false);
     } catch (error) {
       setLoadingIndicator(false);
       if (error.code === 'auth/user-not-found') {

@@ -19,7 +19,7 @@ const MainStack = createStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
 export const MainStackScreen = () => (
-  <NavigationContainer>
+  <NavigationContainer independent={true}>
     <MainStack.Navigator>
       <MainStack.Screen
         name={screenNames.login}
@@ -44,86 +44,84 @@ export const TabsScreen = () => {
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer independent={true}>
-        <BottomTabs.Navigator
-          screenOptions={{
-            headerShown: false,
-            tabBarShowLabel: false,
+      <BottomTabs.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
 
-            tabBarStyle:
-              width > height
-                ? {
-                    alignSelf: 'flex-end',
-                    width: height,
-                    transform: [
-                      {rotate: '-90deg'},
-                      {translateX: height / 2 - StatusBar.currentHeight},
-                      {
-                        translateY: height / 2,
-                      },
-                    ],
-                  }
-                : {},
-          }}>
-          <BottomTabs.Screen
-            name={screenNames.home}
-            component={home}
-            options={{
-              tabBarIcon: function tabIcon({focused}) {
-                return (
-                  <View
-                    style={
-                      width > height
-                        ? {
-                            transform: [{rotate: '90deg'}],
-                          }
-                        : {}
-                    }>
-                    <Icon
-                      name={focused ? 'ri-home-fill' : 'ri-home-line'}
-                      size="28"
-                      color="grey"></Icon>
-                  </View>
-                );
-              },
-            }}
-          />
-          <BottomTabs.Screen
-            name={screenNames.camera}
-            component={camera}
-            options={{
-              tabBarButton: function tabButton(props) {
-                return <Fab {...props} />;
-              },
-            }}
-          />
-          <BottomTabs.Screen
-            name={screenNames.summary}
-            component={summary}
-            options={{
-              tabBarIcon: function tabIcon({focused}) {
-                return (
-                  <View
-                    style={
-                      width > height
-                        ? {
-                            transform: [{rotate: '90deg'}],
-                          }
-                        : {}
-                    }>
-                    <Icon
-                      name={
-                        focused ? 'ri-information-fill' : 'ri-information-line'
-                      }
-                      size="28"
-                      color="grey"></Icon>
-                  </View>
-                );
-              },
-            }}
-          />
-        </BottomTabs.Navigator>
-      </NavigationContainer>
+          tabBarStyle:
+            width > height
+              ? {
+                  alignSelf: 'flex-end',
+                  width: height,
+                  transform: [
+                    {rotate: '-90deg'},
+                    {translateX: height / 2 - StatusBar.currentHeight},
+                    {
+                      translateY: height / 2,
+                    },
+                  ],
+                }
+              : {},
+        }}>
+        <BottomTabs.Screen
+          name={screenNames.home}
+          component={home}
+          options={{
+            tabBarIcon: function tabIcon({focused}) {
+              return (
+                <View
+                  style={
+                    width > height
+                      ? {
+                          transform: [{rotate: '90deg'}],
+                        }
+                      : {}
+                  }>
+                  <Icon
+                    name={focused ? 'ri-home-fill' : 'ri-home-line'}
+                    size="28"
+                    color="grey"></Icon>
+                </View>
+              );
+            },
+          }}
+        />
+        <BottomTabs.Screen
+          name={screenNames.camera}
+          component={camera}
+          options={{
+            tabBarButton: function tabButton(props) {
+              return <Fab {...props} />;
+            },
+          }}
+        />
+        <BottomTabs.Screen
+          name={screenNames.summary}
+          component={summary}
+          options={{
+            tabBarIcon: function tabIcon({focused}) {
+              return (
+                <View
+                  style={
+                    width > height
+                      ? {
+                          transform: [{rotate: '90deg'}],
+                        }
+                      : {}
+                  }>
+                  <Icon
+                    name={
+                      focused ? 'ri-information-fill' : 'ri-information-line'
+                    }
+                    size="28"
+                    color="grey"></Icon>
+                </View>
+              );
+            },
+          }}
+        />
+      </BottomTabs.Navigator>
     </SafeAreaProvider>
   );
 };

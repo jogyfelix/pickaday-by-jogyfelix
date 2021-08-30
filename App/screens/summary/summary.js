@@ -7,11 +7,29 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
+  Alert,
 } from 'react-native';
 import colors from '../../constants/colors';
+import screenNames from '../../constants/screenNames';
 
-const summary = () => {
+const summary = ({navigation}) => {
   const {height, width} = useWindowDimensions();
+
+  const logoutUser = () => {
+    Alert.alert('Logout', 'you will be logged out', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          navigation.navigate(screenNames.login);
+        },
+      },
+    ]);
+  };
+
   return (
     <ScrollView
       style={
@@ -57,7 +75,7 @@ const summary = () => {
         <Text style={portraitStyle.childValue}>21°</Text>
         <Text style={portraitStyle.childDetails}>Mon,Jan 1,2021</Text>
       </View>
-      <TouchableOpacity style={portraitStyle.buttonStyle}>
+      <TouchableOpacity style={portraitStyle.buttonStyle} onPress={logoutUser}>
         <Text style={portraitStyle.buttonText}>LOGOUT</Text>
       </TouchableOpacity>
     </ScrollView>
