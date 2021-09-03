@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -11,9 +11,14 @@ import {
 } from 'react-native';
 import colors from '../../constants/colors';
 import screenNames from '../../constants/screenNames';
+import firestore from '@react-native-firebase/firestore';
+import {showShortSnackBar} from '../../components/snackBar';
+import {format} from 'date-fns';
 
 const summary = ({navigation}) => {
   const {height, width} = useWindowDimensions();
+  const [highestTemp, setHighestTemp] = useState({});
+  const [lowestTemp, setLowestTemp] = useState({});
 
   const logoutUser = () => {
     Alert.alert('Logout', 'you will be logged out', [
@@ -28,6 +33,48 @@ const summary = ({navigation}) => {
         },
       },
     ]);
+  };
+
+  const getData = async () => {
+    try {
+      const highestTempData = await firestore()
+        .collection('daysDetails')
+        .orderBy('temperature', 'desc')
+        .limit(1)
+        .get();
+
+      highestTempData.forEach(querySnapshot => {
+        setHighestTemp(querySnapshot.data());
+      });
+
+      const lowestTempData = await firestore()
+        .collection('daysDetails')
+        .orderBy('temperature', 'asc')
+        .limit(1)
+        .get();
+
+      lowestTempData.forEach(querySnapshot => {
+        setLowestTemp(querySnapshot.data());
+      });
+    } catch (error) {
+      showShortSnackBar('Something went wrong.Please try again');
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const formatDate = flag => {
+    if (flag === 'high') {
+      if (highestTemp.date === undefined) return '';
+      else
+        return format(new Date(highestTemp.date.toDate()), 'EEEE,MMM dd,yyyy');
+    } else {
+      if (lowestTemp.date === undefined) return '';
+      else
+        return format(new Date(lowestTemp.date.toDate()), 'EEEE,MMM dd,yyyy');
+    }
   };
 
   return (
@@ -60,8 +107,10 @@ const summary = ({navigation}) => {
               : portraitStyle.childViewParent
           }>
           <Text style={portraitStyle.childTitle}>Hottest day</Text>
-          <Text style={portraitStyle.childValue}>39°</Text>
-          <Text style={portraitStyle.childDetails}>Sun,Jan 12,2021</Text>
+          <Text style={portraitStyle.childValue}>
+            {highestTemp.temperature}°
+          </Text>
+          <Text style={portraitStyle.childDetails}>{formatDate('high')}</Text>
         </View>
       </View>
 
@@ -72,8 +121,8 @@ const summary = ({navigation}) => {
             : portraitStyle.childViewParent
         }>
         <Text style={portraitStyle.childTitle}>Coldest day</Text>
-        <Text style={portraitStyle.childValue}>21°</Text>
-        <Text style={portraitStyle.childDetails}>Mon,Jan 1,2021</Text>
+        <Text style={portraitStyle.childValue}>{lowestTemp.temperature}°</Text>
+        <Text style={portraitStyle.childDetails}> {formatDate('low')}</Text>
       </View>
       <TouchableOpacity style={portraitStyle.buttonStyle} onPress={logoutUser}>
         <Text style={portraitStyle.buttonText}>LOGOUT</Text>
