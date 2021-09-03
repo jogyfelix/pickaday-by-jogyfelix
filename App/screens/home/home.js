@@ -4,16 +4,21 @@ import firestore from '@react-native-firebase/firestore';
 import HomeListItem from '../../components/homeListItem';
 import {showShortSnackBar} from '../../components/snackBar';
 
-const home = () => {
+const home = ({route}) => {
   const {height, width} = useWindowDimensions();
   const [dayDetails, setDayDetails] = useState([]);
+  const params = route.params;
 
   const getData = async () => {
     try {
       setDayDetails([]);
-      const data = await firestore().collection('daysDetails').get();
-      data.forEach(documentSnapShot => {
-        setDayDetails(oldDetails => [...oldDetails, documentSnapShot.data()]);
+      const data = await firestore()
+        .collection('daysDetails')
+        .where('email', '==', params.email)
+        .get();
+
+      data.forEach(querySnapshot => {
+        setDayDetails(oldDetails => [...oldDetails, querySnapshot.data()]);
       });
     } catch (error) {
       showShortSnackBar('Something went wrong.Please try again');

@@ -1,21 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {
-  useWindowDimensions,
-  View,
-  StatusBar,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
+import {useWindowDimensions, View, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import auth from '@react-native-firebase/auth';
 import colors from '../../constants/colors';
 import strings from '../../constants/strings';
 import {showShortSnackBar} from '../../components/snackBar';
 import screenNames from 'App/constants/screenNames';
+import {LogoContainer, LoginInputContainer} from '../../styles/wrappers';
+import {LogoImage} from '../../styles/images';
+import {LogoText} from '../../styles/texts';
+import {LoginInput} from '../../styles/inputs';
+import {LoginButton} from '../../styles/buttons';
 
 export default function Login({navigation}) {
   const {height, width} = useWindowDimensions();
@@ -30,8 +25,13 @@ export default function Login({navigation}) {
 
   const loginUser = async (userName, password) => {
     try {
-      await auth().signInWithEmailAndPassword(userName, password);
-      navigation.push(screenNames.homeNavigator);
+      const user = await auth().signInWithEmailAndPassword(userName, password);
+      navigation.push(screenNames.homeNavigator, {
+        screen: screenNames.home,
+        params: {email: user.user.email},
+      });
+
+      setLoadingIndicator(false);
     } catch (error) {
       setLoadingIndicator(false);
       if (error.code === 'auth/user-not-found') {
@@ -45,12 +45,20 @@ export default function Login({navigation}) {
 
   const newUser = async (userName, password) => {
     try {
-      await auth().createUserWithEmailAndPassword(userName, password);
-      navigation.push(screenNames.homeNavigator);
+      const user = await auth().createUserWithEmailAndPassword(
+        userName,
+        password,
+      );
+      navigation.push(screenNames.homeNavigator, {
+        screen: screenNames.home,
+        params: {email: user.user.email},
+      });
+      setLoadingIndicator(false);
     } catch (error) {
       setLoadingIndicator(false);
       if (error.code === 'auth/email-already-in-use') {
         showShortSnackBar('Email already in use.');
+        setNoUser(false);
       }
       if (error.code === 'auth/invalid-email') {
         showShortSnackBar('That email address is invalid!');
@@ -62,31 +70,18 @@ export default function Login({navigation}) {
   };
 
   return (
-    <View
-      style={height > width ? portraitStyles.parent : landScapeStyles.parent}>
+    <View>
       <StatusBar barStyle="light-content" />
-      <View
-        style={
-          height > width
-            ? portraitStyles.logoParent
-            : landScapeStyles.logoParent
-        }>
-        <Image
-          style={
-            height > width ? portraitStyles.tinyLogo : landScapeStyles.tinyLogo
-          }
+      <LogoContainer landscapeMode={height > width ? false : true}>
+        <LogoImage
+          landscapeMode={height > width ? false : true}
           resizeMode="contain"
           source={require('../../assets/images/picaday.png')}
         />
-        <Text style={{color: colors.grey}}>{strings.TAG_LINE}</Text>
-      </View>
-      <View
-        style={
-          height > width
-            ? portraitStyles.inputItems
-            : landScapeStyles.inputItems
-        }>
-        <TextInput
+        <LogoText>{strings.TAG_LINE}</LogoText>
+      </LogoContainer>
+      <LoginInputContainer landscapeMode={height > width ? false : true}>
+        <LoginInput
           autoCapitalize="none"
           autoCorrect={false}
           value={userName}
@@ -94,13 +89,9 @@ export default function Login({navigation}) {
           placeholder="email"
           placeholderTextColor="gray"
           returnKeyType="next"
-          style={
-            height > width
-              ? portraitStyles.inputSelected
-              : landScapeStyles.inputSelected
-          }
+          landscapeMode={height > width ? false : true}
         />
-        <TextInput
+        <LoginInput
           autoCapitalize="none"
           autoCorrect={false}
           value={password}
@@ -109,9 +100,10 @@ export default function Login({navigation}) {
           placeholder="password"
           placeholderTextColor="gray"
           returnKeyType="done"
-          style={height > width ? portraitStyles.input : landScapeStyles.input}
+          password
+          landscapeMode={height > width ? false : true}
         />
-        <TouchableOpacity
+        <LoginButton
           onPress={() => {
             if (userName !== '' && password !== '') {
               setLoadingIndicator(true);
@@ -121,137 +113,13 @@ export default function Login({navigation}) {
               showShortSnackBar('Please enter email/password');
             }
           }}
-          style={
-            height > width
-              ? portraitStyles.loginButton
-              : landScapeStyles.loginButton
-          }>
-          {loadingIndicator ? (
-            <ActivityIndicator
-              animating={loadingIndicator}
-              style={
-                height > width
-                  ? portraitStyles.loadingIndicator
-                  : landScapeStyles.loadingIndicator
-              }
-              size="small"
-              color={colors.white}
-            />
-          ) : (
-            <Text
-              style={
-                height > width
-                  ? portraitStyles.loginText
-                  : landScapeStyles.loginText
-              }>
-              {noUser ? strings.SIGN_UP : strings.SIGN_IN}
-            </Text>
-          )}
-        </TouchableOpacity>
-      </View>
+          landscapeMode={height > width ? false : true}
+          loadingIndicator={loadingIndicator}
+          size="small"
+          color={colors.white}
+          text={noUser ? strings.SIGN_UP : strings.SIGN_IN}
+        />
+      </LoginInputContainer>
     </View>
   );
 }
-
-const portraitStyles = StyleSheet.create({
-  parent: {},
-  inputItems: {},
-  tinyLogo: {
-    height: 50,
-    width: 100,
-  },
-  logoParent: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    marginVertical: 40,
-  },
-  inputSelected: {
-    borderWidth: 1.5,
-    borderColor: colors.appPrimary,
-    marginTop: 16,
-    marginHorizontal: 16,
-    height: 42,
-    padding: 10,
-    fontSize: 16,
-    borderRadius: 8,
-    backgroundColor: colors.lightGray,
-  },
-  input: {
-    marginTop: 16,
-    marginHorizontal: 16,
-    height: 42,
-    padding: 10,
-    fontSize: 16,
-    borderRadius: 8,
-    backgroundColor: colors.lightGray,
-  },
-  loginButton: {
-    marginTop: 30,
-    marginHorizontal: 16,
-    height: 42,
-    borderRadius: 8,
-    elevation: 5,
-    alignItems: 'center',
-    backgroundColor: colors.appPrimary,
-  },
-  loginText: {
-    color: colors.white,
-    marginVertical: 12,
-  },
-  loadingIndicator: {
-    marginVertical: 12,
-  },
-});
-
-const landScapeStyles = StyleSheet.create({
-  parent: {},
-  inputItems: {alignSelf: 'center'},
-  tinyLogo: {
-    height: 30,
-    width: 100,
-  },
-  logoParent: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  inputSelected: {
-    borderWidth: 1.5,
-    borderColor: colors.appPrimary,
-    marginTop: 16,
-    marginHorizontal: 16,
-    height: 42,
-    width: 400,
-    padding: 10,
-    fontSize: 16,
-    borderRadius: 8,
-    backgroundColor: colors.lightGray,
-  },
-  input: {
-    marginTop: 16,
-    marginHorizontal: 16,
-    height: 42,
-    width: 400,
-    padding: 10,
-    fontSize: 16,
-    borderRadius: 8,
-    backgroundColor: colors.lightGray,
-  },
-  loginButton: {
-    marginTop: 30,
-    marginHorizontal: 16,
-    height: 42,
-    width: 400,
-    borderRadius: 8,
-    elevation: 5,
-    alignItems: 'center',
-    backgroundColor: colors.appPrimary,
-  },
-  loginText: {
-    color: colors.white,
-    marginVertical: 12,
-  },
-  loadingIndicator: {
-    marginVertical: 10,
-  },
-});

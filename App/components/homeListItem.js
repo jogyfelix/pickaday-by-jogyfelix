@@ -9,11 +9,14 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-remix-icon';
 import propTypes from 'prop-types';
+import {format} from 'date-fns';
 
 const HomeListItem = ({image, location, temperature, date}) => {
   const {height, width} = useWindowDimensions();
   const splitDate = date => {
-    const [day, month] = date.split('/');
+    const [day, month] = format(new Date(date.toDate()), 'dd/MMM/yyyy').split(
+      '/',
+    );
     return `${day}\n${month}`;
   };
   return (
@@ -36,7 +39,7 @@ const HomeListItem = ({image, location, temperature, date}) => {
           <Text style={styles.locationText}>{location}</Text>
         </View>
         <View style={styles.tempView}>
-          <Text style={styles.tempText}>{`${temperature}°`}</Text>
+          <Text style={styles.tempText}>{temperature}°</Text>
           <Icon name="ri-sun-line" size="18" color="white"></Icon>
         </View>
         <Text style={styles.dateText}>{splitDate(date)}</Text>
@@ -83,8 +86,8 @@ const styles = StyleSheet.create({
 HomeListItem.propTypes = {
   image: propTypes.string.isRequired,
   location: propTypes.string.isRequired,
-  temperature: propTypes.string.isRequired,
-  date: propTypes.string.isRequired,
+  temperature: propTypes.number.isRequired,
+  date: propTypes.object.isRequired,
 };
 
 export default HomeListItem;
