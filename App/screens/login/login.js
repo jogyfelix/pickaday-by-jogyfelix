@@ -11,6 +11,7 @@ import {LogoImage} from '../../styles/images';
 import {LogoText} from '../../styles/texts';
 import {LoginInput} from '../../styles/inputs';
 import {LoginButton} from '../../styles/buttons';
+import firestore from '@react-native-firebase/firestore';
 
 export default function Login({navigation}) {
   const {height, width} = useWindowDimensions();
@@ -28,7 +29,7 @@ export default function Login({navigation}) {
       const user = await auth().signInWithEmailAndPassword(userName, password);
       navigation.push(screenNames.homeNavigator, {
         screen: screenNames.home,
-        params: {email: user.user.email},
+        params: {uid: user.user.uid},
       });
 
       setLoadingIndicator(false);
@@ -49,9 +50,20 @@ export default function Login({navigation}) {
         userName,
         password,
       );
+
+      const currentDate = firestore.Timestamp.fromDate(new Date())
+
+      const addUserDetails = firestore()
+      .collection('Users')
+      .add({
+        email: user.user.email,
+        uid: user.user.uid,
+        date: currentDate,
+  })
+  
       navigation.push(screenNames.homeNavigator, {
         screen: screenNames.home,
-        params: {email: user.user.email},
+        params: {uid: user.user.uid},
       });
       setLoadingIndicator(false);
     } catch (error) {

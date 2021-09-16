@@ -41,6 +41,7 @@ const summary = ({navigation}) => {
         .collection('daysDetails')
         .orderBy('temperature', 'desc')
         .limit(1)
+        .where('uid', '==', params.uid)
         .get();
 
       highestTempData.forEach(querySnapshot => {
@@ -51,6 +52,7 @@ const summary = ({navigation}) => {
         .collection('daysDetails')
         .orderBy('temperature', 'asc')
         .limit(1)
+        .where('uid', '==', params.uid)
         .get();
 
       lowestTempData.forEach(querySnapshot => {
