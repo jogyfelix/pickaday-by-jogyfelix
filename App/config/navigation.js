@@ -49,20 +49,7 @@ export const TabsScreen = () => {
           headerShown: false,
           tabBarShowLabel: false,
 
-          tabBarStyle:
-            width > height
-              ? {
-                  alignSelf: 'flex-end',
-                  width: height,
-                  transform: [
-                    {rotate: '-90deg'},
-                    {translateX: height / 2 - StatusBar.currentHeight},
-                    {
-                      translateY: height / 2,
-                    },
-                  ],
-                }
-              : {},
+      
         }}>
         <BottomTabs.Screen
           name={screenNames.home}
@@ -71,13 +58,7 @@ export const TabsScreen = () => {
             tabBarIcon: function tabIcon({focused}) {
               return (
                 <View
-                  style={
-                    width > height
-                      ? {
-                          transform: [{rotate: '90deg'}],
-                        }
-                      : {}
-                  }>
+                  >
                   <Icon
                     name={focused ? 'ri-home-fill' : 'ri-home-line'}
                     size="28"
@@ -103,13 +84,7 @@ export const TabsScreen = () => {
             tabBarIcon: function tabIcon({focused}) {
               return (
                 <View
-                  style={
-                    width > height
-                      ? {
-                          transform: [{rotate: '90deg'}],
-                        }
-                      : {}
-                  }>
+                  >
                   <Icon
                     name={
                       focused ? 'ri-information-fill' : 'ri-information-line'

@@ -14,7 +14,7 @@ const home = ({route}) => {
       setDayDetails([]);
       const data = await firestore()
         .collection('daysDetails')
-        .where('email', '==', params.email)
+        .where('uid', '==', params.uid)
         .get();
 
       data.forEach(querySnapshot => {
@@ -27,6 +27,7 @@ const home = ({route}) => {
 
   useEffect(() => {
     getData();
+   
   }, []);
 
   return height > width ? (

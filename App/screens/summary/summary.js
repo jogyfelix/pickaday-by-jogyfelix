@@ -19,6 +19,8 @@ const summary = ({navigation}) => {
   const {height, width} = useWindowDimensions();
   const [highestTemp, setHighestTemp] = useState({});
   const [lowestTemp, setLowestTemp] = useState({});
+  const [userData, setUserData] = useState({});
+  
 
   const logoutUser = () => {
     Alert.alert('Logout', 'you will be logged out', [
@@ -39,6 +41,7 @@ const summary = ({navigation}) => {
     try {
       const highestTempData = await firestore()
         .collection('daysDetails')
+        // .where('uid', '==', 'nFZr79ZlUlcf6z4lTwMxKY8WfTx1')
         .orderBy('temperature', 'desc')
         .limit(1)
         .get();
@@ -51,12 +54,24 @@ const summary = ({navigation}) => {
         .collection('daysDetails')
         .orderBy('temperature', 'asc')
         .limit(1)
+        // .where('uid', '==', 'nFZr79ZlUlcf6z4lTwMxKY8WfTx1')
         .get();
 
       lowestTempData.forEach(querySnapshot => {
         setLowestTemp(querySnapshot.data());
       });
+
+      const userDetails = await firestore()
+      .collection('Users')
+      .where('uid', '==', 'nFZr79ZlUlcf6z4lTwMxKY8WfTx1')
+      .get()
+
+      userDetails.forEach(querySnapshot => {
+        setUserData(querySnapshot.data());
+      });
+
     } catch (error) {
+      console.log(error)
       showShortSnackBar('Something went wrong.Please try again');
     }
   };
@@ -77,6 +92,18 @@ const summary = ({navigation}) => {
     }
   };
 
+  const formatRecordedDays = () => {
+    if (userData.date === undefined) return '';
+    else{
+      const startDate = new Date(userData.date.toDate())
+      const currentDate = new Date()
+      const diffTime = Math.abs(currentDate - startDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+      return diffDays
+    }
+      
+  }
+
   return (
     <ScrollView
       style={
@@ -95,7 +122,7 @@ const summary = ({navigation}) => {
               : portraitStyle.childViewParent
           }>
           <Text style={portraitStyle.childTitle}>Days</Text>
-          <Text style={portraitStyle.childValue}>17/19</Text>
+          <Text style={portraitStyle.childValue}>17/{formatRecordedDays()}</Text>
           <Text style={portraitStyle.childDetails}>
             You have recorded 17 days since the first day
           </Text>
