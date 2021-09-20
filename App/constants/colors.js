@@ -7,4 +7,5 @@ export default {
   lightGray: '#E9E9E9',
   darkGrey: '#314743',
   lightBlack: '#626058',
+  darkBackground:'#212121',
 };
