@@ -11,6 +11,8 @@ import home from '../screens/home/home';
 import homeNavigator from '../screens/home/homeNavigator';
 import summary from '../screens/summary/summary';
 import camera from '../screens/camera/camera';
+import dayView from '../screens/dayView/dayView';
+import dayViewEdit from '../screens/dayViewEdit/dayViewEdit';
 
 import Icon from 'react-native-remix-icon';
 import Fab from 'App/components/fab';
@@ -35,21 +37,31 @@ export const MainStackScreen = () => (
           headerShown: false,
         }}
       />
+      <MainStack.Screen
+        name={screenNames.dayView}
+        component={dayView}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <MainStack.Screen
+        name={screenNames.dayViewEdit}
+        component={dayViewEdit}
+        options={{
+          headerShown: false,
+        }}
+      />
     </MainStack.Navigator>
   </NavigationContainer>
 );
 
 export const TabsScreen = () => {
-  const {height, width} = useWindowDimensions();
-
   return (
     <SafeAreaProvider>
       <BottomTabs.Navigator
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
-
-      
         }}>
         <BottomTabs.Screen
           name={screenNames.home}
@@ -57,8 +69,7 @@ export const TabsScreen = () => {
           options={{
             tabBarIcon: function tabIcon({focused}) {
               return (
-                <View
-                  >
+                <View>
                   <Icon
                     name={focused ? 'ri-home-fill' : 'ri-home-line'}
                     size="28"
@@ -83,8 +94,7 @@ export const TabsScreen = () => {
           options={{
             tabBarIcon: function tabIcon({focused}) {
               return (
-                <View
-                  >
+                <View>
                   <Icon
                     name={
                       focused ? 'ri-information-fill' : 'ri-information-line'

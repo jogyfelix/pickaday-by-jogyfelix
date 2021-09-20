@@ -3,5 +3,7 @@ export default {
   home: 'Home',
   summary: 'Summary',
   camera: 'Camera',
+  dayView: 'DayView',
+  dayViewEdit: 'DayViewEdit',
   homeNavigator: 'HomeNavigator',
 };

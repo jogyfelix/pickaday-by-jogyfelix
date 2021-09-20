@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, useWindowDimensions} from 'react-native';
+import {FlatList, useWindowDimensions, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import HomeListItem from '../../components/homeListItem';
 import {showShortSnackBar} from '../../components/snackBar';
+import dayView from '../dayView/dayView';
+import dayViewEdit from '../dayViewEdit/dayViewEdit';
+import screenNames from 'App/constants/screenNames';
 
-const home = ({route}) => {
+const home = ({navigation, route}) => {
   const {height, width} = useWindowDimensions();
   const [dayDetails, setDayDetails] = useState([]);
   const params = route.params;
@@ -27,7 +30,6 @@ const home = ({route}) => {
 
   useEffect(() => {
     getData();
-   
   }, []);
 
   return height > width ? (
@@ -37,7 +39,16 @@ const home = ({route}) => {
       keyExtractor={(item, index) => index.toString()}
       numColumns={1}
       renderItem={({item}) => {
-        return <HomeListItem {...item} />;
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(screenNames.dayView, {
+                item: item,
+              });
+            }}>
+            <HomeListItem {...item} />
+          </TouchableOpacity>
+        );
       }}
     />
   ) : (
@@ -47,7 +58,16 @@ const home = ({route}) => {
       keyExtractor={(item, index) => index.toString()}
       numColumns={2}
       renderItem={({item}) => {
-        return <HomeListItem {...item} />;
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(screenNames.dayView, {
+                item: item,
+              });
+            }}>
+            <HomeListItem {...item} />
+          </TouchableOpacity>
+        );
       }}
     />
   );
