@@ -10,7 +10,7 @@ import {useCamera} from 'react-native-camera-hooks';
 import Icon from 'react-native-remix-icon';
 import colors from '../../constants/colors';
 
-const camera = ({navigation}) => {
+const PictureView = ({navigation}) => {
   const [{cameraRef}, {takePicture}] = useCamera(null);
   const {height, width} = useWindowDimensions();
 
@@ -29,9 +29,6 @@ const camera = ({navigation}) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity style={{alignSelf: 'center', marginLeft: 28}}>
-            <Icon name="ri-flashlight-line" size="26" color="white" />
-          </TouchableOpacity>
           <TouchableOpacity
             style={{
               alignItems: 'center',
@@ -42,11 +39,11 @@ const camera = ({navigation}) => {
               alignSelf: 'center',
               backgroundColor: colors.appPrimary,
             }}>
-            <Icon name="ri-camera-lens-line" size="26" color="white" />
+            <Icon name="ri-check-fill" size="26" color="white" />
           </TouchableOpacity>
 
           <TouchableOpacity style={{alignSelf: 'center', marginRight: 28}}>
-            <Icon name="ri-camera-switch-line" size="26" color="white" />
+            <Icon name="ri-restart-line" size="26" color="white" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -81,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default camera;
+export default PictureView;

@@ -83,6 +83,9 @@ export const TabsScreen = () => {
           name={screenNames.camera}
           component={camera}
           options={{
+            tabBarStyle: {
+              display: 'none',
+            },
             tabBarButton: function tabButton(props) {
               return <Fab {...props} />;
             },
