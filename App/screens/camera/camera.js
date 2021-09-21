@@ -15,37 +15,17 @@ const camera = ({navigation}) => {
   const {height, width} = useWindowDimensions();
 
   return (
-    <View style={{flex: 1}}>
-      <RNCamera style={{flex: 1}} ref={cameraRef} captureAudio={false}>
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width: '100%',
-            height: 80,
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            padding: 16,
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <TouchableOpacity style={{alignSelf: 'center', marginLeft: 28}}>
+    <View style={styles.parent}>
+      <RNCamera style={styles.parent} ref={cameraRef} captureAudio={false}>
+        <View style={styles.subParent}>
+          <TouchableOpacity style={styles.flashTouch}>
             <Icon name="ri-flashlight-line" size="26" color="white" />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 50,
-              width: 50,
-              borderRadius: 30,
-              alignSelf: 'center',
-              backgroundColor: colors.appPrimary,
-            }}>
+          <TouchableOpacity style={styles.click}>
             <Icon name="ri-camera-lens-line" size="26" color="white" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={{alignSelf: 'center', marginRight: 28}}>
+          <TouchableOpacity style={styles.switch}>
             <Icon name="ri-camera-switch-line" size="26" color="white" />
           </TouchableOpacity>
         </View>
@@ -79,6 +59,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 16,
   },
+  parent: {flex: 1},
+  subParent: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 80,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    padding: 16,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  flashTouch: {alignSelf: 'center', marginLeft: 28},
+  click: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    width: 50,
+    borderRadius: 30,
+    alignSelf: 'center',
+    backgroundColor: colors.appPrimary,
+  },
+  switch: {alignSelf: 'center', marginRight: 28},
 });
 
 export default camera;
