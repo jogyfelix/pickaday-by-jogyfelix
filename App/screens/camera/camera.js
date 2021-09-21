@@ -9,10 +9,26 @@ import {RNCamera} from 'react-native-camera';
 import {useCamera} from 'react-native-camera-hooks';
 import Icon from 'react-native-remix-icon';
 import colors from '../../constants/colors';
+import RNFS from 'react-native-fs';
+import screenNames from 'App/constants/screenNames';
 
 const camera = ({navigation}) => {
   const [{cameraRef}, {takePicture}] = useCamera(null);
   const {height, width} = useWindowDimensions();
+
+  const captureHandle = async () => {
+    try {
+      const defPath = await takePicture();
+      const newPath = RNFS.ExternalDirectoryPath + '/' + Math.random() + '.jpg';
+      RNFS.moveFile(defPath.uri, newPath);
+      await navigation.push(screenNames.pictureView, {
+        screen: screenNames.home,
+        params: {path: newPath},
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.parent}>
@@ -21,7 +37,7 @@ const camera = ({navigation}) => {
           <TouchableOpacity style={styles.flashTouch}>
             <Icon name="ri-flashlight-line" size="26" color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.click}>
+          <TouchableOpacity style={styles.click} onPress={captureHandle}>
             <Icon name="ri-camera-lens-line" size="26" color="white" />
           </TouchableOpacity>
 

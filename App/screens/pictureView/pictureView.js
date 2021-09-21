@@ -4,34 +4,80 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
+  ImageBackground,
+  BackHandler,
+  Alert,
 } from 'react-native';
-import {RNCamera} from 'react-native-camera';
-import {useCamera} from 'react-native-camera-hooks';
 import Icon from 'react-native-remix-icon';
 import colors from '../../constants/colors';
+import RNFS from 'react-native-fs';
 
-const PictureView = ({navigation}) => {
-  const [{cameraRef}, {takePicture}] = useCamera(null);
+const PictureView = ({route, navigation}) => {
   const {height, width} = useWindowDimensions();
+  const imageLoc = 'file://' + route.params.params.path;
 
+  const backAction = () => {
+    Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {
+        text: 'YES',
+        onPress: () => {
+          delteFiles(imageLoc);
+          navigation.goBack();
+        },
+      },
+    ]);
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    backAction,
+  );
+
+  const delteFiles = async filepath => {
+    let exists = await RNFS.exists(filepath);
+    if (exists) {
+      // exists call delete
+      await RNFS.unlink(filepath);
+      console.log('File Deleted');
+    } else {
+      console.log('File Not Available');
+    }
+  };
   return (
     <View style={styles.parent}>
-      <RNCamera style={styles.parent} ref={cameraRef} captureAudio={false}>
+      <ImageBackground
+        style={styles.imgParent}
+        resizeMode="cover"
+        source={{uri: imageLoc}}>
         <View style={styles.subParent}>
           <TouchableOpacity style={styles.click}>
             <Icon name="ri-check-fill" size="26" color="white" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.switch}>
+          <TouchableOpacity
+            style={styles.switch}
+            onPress={() => {
+              delteFiles(imageLoc);
+              navigation.goBack();
+            }}>
             <Icon name="ri-restart-line" size="26" color="white" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={width > height ? styles.backLand : styles.backPort}
-          onPress={() => navigation.goBack()}>
+          onPress={() => {
+            delteFiles(imageLoc);
+            navigation.goBack();
+          }}>
           <Icon name="ri-arrow-left-s-line" size="20" color="white" />
         </TouchableOpacity>
-      </RNCamera>
+      </ImageBackground>
     </View>
   );
 };
@@ -66,7 +112,7 @@ const styles = StyleSheet.create({
     padding: 16,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   click: {
     alignItems: 'center',
@@ -78,6 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.appPrimary,
   },
   switch: {alignSelf: 'center', marginRight: 28},
+  imgParent: {flex: 1, width: '100%', height: '100%'},
 });
 
 export default PictureView;
