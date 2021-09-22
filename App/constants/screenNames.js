@@ -6,4 +6,5 @@ export default {
   dayView: 'DayView',
   dayViewEdit: 'DayViewEdit',
   homeNavigator: 'HomeNavigator',
+  pictureView: 'PictureView',
 };

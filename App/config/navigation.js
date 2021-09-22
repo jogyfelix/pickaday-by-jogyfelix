@@ -13,6 +13,7 @@ import summary from '../screens/summary/summary';
 import camera from '../screens/camera/camera';
 import dayView from '../screens/dayView/dayView';
 import dayViewEdit from '../screens/dayViewEdit/dayViewEdit';
+import PictureView from '../screens/pictureView/pictureView';
 
 import Icon from 'react-native-remix-icon';
 import Fab from 'App/components/fab';
@@ -51,6 +52,13 @@ export const MainStackScreen = () => (
           headerShown: false,
         }}
       />
+      <MainStack.Screen
+        name={screenNames.pictureView}
+        component={PictureView}
+        options={{
+          headerShown: false,
+        }}
+      />
     </MainStack.Navigator>
   </NavigationContainer>
 );
@@ -83,6 +91,9 @@ export const TabsScreen = () => {
           name={screenNames.camera}
           component={camera}
           options={{
+            tabBarStyle: {
+              display: 'none',
+            },
             tabBarButton: function tabButton(props) {
               return <Fab {...props} />;
             },

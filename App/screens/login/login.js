@@ -51,16 +51,14 @@ export default function Login({navigation}) {
         password,
       );
 
-      const currentDate = firestore.Timestamp.fromDate(new Date())
+      const currentDate = firestore.Timestamp.fromDate(new Date());
 
-      const addUserDetails = firestore()
-      .collection('Users')
-      .add({
+      const addUserDetails = firestore().collection('Users').add({
         email: user.user.email,
         uid: user.user.uid,
         date: currentDate,
-  })
-  
+      });
+
       navigation.push(screenNames.homeNavigator, {
         screen: screenNames.home,
         params: {uid: user.user.uid},

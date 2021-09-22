@@ -3,8 +3,6 @@ import {FlatList, useWindowDimensions, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import HomeListItem from '../../components/homeListItem';
 import {showShortSnackBar} from '../../components/snackBar';
-import dayView from '../dayView/dayView';
-import dayViewEdit from '../dayViewEdit/dayViewEdit';
 import screenNames from 'App/constants/screenNames';
 
 const home = ({navigation, route}) => {
