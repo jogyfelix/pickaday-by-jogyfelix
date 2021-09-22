@@ -11,10 +11,42 @@ import {
 import Icon from 'react-native-remix-icon';
 import colors from '../../constants/colors';
 import RNFS from 'react-native-fs';
+import {getLocation} from 'App/utils/getLocation';
+import {getLocationDetails, getweatherDetails} from '../../utils/apis';
+import screenNames from 'App/constants/screenNames';
+import firestore from '@react-native-firebase/firestore';
 
 const PictureView = ({route, navigation}) => {
   const {height, width} = useWindowDimensions();
-  const imageLoc = 'file://' + route.params.params.path;
+  const imageDefPath = route.params.params.path;
+  const imageLoc = 'file://' + imageDefPath;
+
+  const save = async () => {
+    try {
+      const location = await getLocation();
+      const place = await getLocationDetails(
+        location.coords.latitude,
+        location.coords.longitude,
+      );
+      const weather = await getweatherDetails(
+        location.coords.latitude,
+        location.coords.longitude,
+      );
+      const date = firestore.Timestamp.fromDate(new Date());
+
+      navigation.push(screenNames.dayViewEdit, {
+        screen: screenNames.dayViewEdit,
+        params: {
+          image: imageLoc,
+          location: place.data.address.state,
+          temperature: weather.data.main.temp,
+          date: date,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const backAction = () => {
     Alert.alert('Hold on!', 'Are you sure you want to go back?', [
@@ -56,7 +88,7 @@ const PictureView = ({route, navigation}) => {
         resizeMode="cover"
         source={{uri: imageLoc}}>
         <View style={styles.subParent}>
-          <TouchableOpacity style={styles.click}>
+          <TouchableOpacity style={styles.click} onPress={save}>
             <Icon name="ri-check-fill" size="26" color="white" />
           </TouchableOpacity>
 

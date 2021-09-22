@@ -4,6 +4,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
+  Alert,
+  InteractionManager,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {useCamera} from 'react-native-camera-hooks';
@@ -19,9 +21,15 @@ const camera = ({navigation}) => {
   const captureHandle = async () => {
     try {
       const defPath = await takePicture();
-      const newPath = RNFS.ExternalDirectoryPath + '/' + Math.random() + '.jpg';
+      const newPath =
+        RNFS.ExternalDirectoryPath +
+        '/' +
+        Math.round(Math.random() * 10000) +
+        '.jpg';
+
       RNFS.moveFile(defPath.uri, newPath);
-      await navigation.push(screenNames.pictureView, {
+
+      navigation.push(screenNames.pictureView, {
         screen: screenNames.home,
         params: {path: newPath},
       });
