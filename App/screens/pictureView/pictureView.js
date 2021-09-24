@@ -6,7 +6,6 @@ import {
   useWindowDimensions,
   ImageBackground,
   BackHandler,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-remix-icon';
 import colors from '../../constants/colors';
@@ -15,6 +14,8 @@ import {getLocation} from 'App/utils/getLocation';
 import {getLocationDetails, getweatherDetails} from '../../utils/apis';
 import screenNames from 'App/constants/screenNames';
 import firestore from '@react-native-firebase/firestore';
+import {showShortSnackBar} from '../../components/snackBar';
+import strings from 'App/constants/strings';
 
 const PictureView = ({route, navigation}) => {
   const {height, width} = useWindowDimensions();
@@ -44,25 +45,13 @@ const PictureView = ({route, navigation}) => {
         },
       });
     } catch (error) {
-      console.log(error);
+      showShortSnackBar(strings.WRONG_ALERT);
     }
   };
 
   const backAction = () => {
-    Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-      {
-        text: 'Cancel',
-        onPress: () => null,
-        style: 'cancel',
-      },
-      {
-        text: 'YES',
-        onPress: () => {
-          delteFiles(imageLoc);
-          navigation.goBack();
-        },
-      },
-    ]);
+    delteFiles(imageLoc);
+    navigation.goBack();
     return true;
   };
 
@@ -76,9 +65,8 @@ const PictureView = ({route, navigation}) => {
     if (exists) {
       // exists call delete
       await RNFS.unlink(filepath);
-      console.log('File Deleted');
     } else {
-      console.log('File Not Available');
+      showShortSnackBar(strings.FILE_NOT_AVAILABLE);
     }
   };
   return (
@@ -90,15 +78,6 @@ const PictureView = ({route, navigation}) => {
         <View style={styles.subParent}>
           <TouchableOpacity style={styles.click} onPress={save}>
             <Icon name="ri-check-fill" size="26" color="white" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.switch}
-            onPress={() => {
-              delteFiles(imageLoc);
-              navigation.goBack();
-            }}>
-            <Icon name="ri-restart-line" size="26" color="white" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity

@@ -12,8 +12,10 @@ import {LogoText} from '../../styles/texts';
 import {LoginInput} from '../../styles/inputs';
 import {LoginButton} from '../../styles/buttons';
 import firestore from '@react-native-firebase/firestore';
+import {connect} from 'react-redux';
+import * as actions from '../../redux/actions';
 
-export default function Login({navigation}) {
+function Login({navigation, setUserDetails}) {
   const {height, width} = useWindowDimensions();
   const [noUser, setNoUser] = useState(false);
   const [userName, setUserName] = useState('');
@@ -27,9 +29,10 @@ export default function Login({navigation}) {
   const loginUser = async (userName, password) => {
     try {
       const user = await auth().signInWithEmailAndPassword(userName, password);
+      const userDetail = {email: user.user.email, uid: user.user.uid};
+      setUserDetails(userDetail);
       navigation.push(screenNames.homeNavigator, {
         screen: screenNames.home,
-        params: {uid: user.user.uid},
       });
 
       setLoadingIndicator(false);
@@ -58,10 +61,10 @@ export default function Login({navigation}) {
         uid: user.user.uid,
         date: currentDate,
       });
-
+      const userDetail = {email: user.user.email, uid: user.user.uid};
+      setUserDetails(userDetail);
       navigation.push(screenNames.homeNavigator, {
         screen: screenNames.home,
-        params: {uid: user.user.uid},
       });
       setLoadingIndicator(false);
     } catch (error) {
@@ -133,3 +136,5 @@ export default function Login({navigation}) {
     </View>
   );
 }
+
+export default connect(null, actions)(Login);

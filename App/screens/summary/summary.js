@@ -14,12 +14,15 @@ import screenNames from '../../constants/screenNames';
 import firestore from '@react-native-firebase/firestore';
 import {showShortSnackBar} from '../../components/snackBar';
 import {format} from 'date-fns';
+import {connect} from 'react-redux';
+import strings from 'App/constants/strings';
 
-const summary = ({navigation}) => {
+const summary = ({navigation, userDetails}) => {
   const {height, width} = useWindowDimensions();
   const [highestTemp, setHighestTemp] = useState({});
   const [lowestTemp, setLowestTemp] = useState({});
   const [userData, setUserData] = useState({});
+  const [recDays, setRecDays] = useState(0);
 
   const logoutUser = () => {
     Alert.alert('Logout', 'you will be logged out', [
@@ -40,7 +43,7 @@ const summary = ({navigation}) => {
     try {
       const highestTempData = await firestore()
         .collection('daysDetails')
-        // .where('uid', '==', 'nFZr79ZlUlcf6z4lTwMxKY8WfTx1')
+        .where('uid', '==', userDetails.uid)
         .orderBy('temperature', 'desc')
         .limit(1)
         .get();
@@ -51,32 +54,45 @@ const summary = ({navigation}) => {
 
       const lowestTempData = await firestore()
         .collection('daysDetails')
+        .where('uid', '==', userDetails.uid)
         .orderBy('temperature', 'asc')
         .limit(1)
-        // .where('uid', '==', 'nFZr79ZlUlcf6z4lTwMxKY8WfTx1')
         .get();
 
       lowestTempData.forEach(querySnapshot => {
         setLowestTemp(querySnapshot.data());
       });
 
-      const userDetails = await firestore()
+      const userDets = await firestore()
         .collection('Users')
-        .where('uid', '==', 'nFZr79ZlUlcf6z4lTwMxKY8WfTx1')
+        .where('uid', '==', userDetails.uid)
         .get();
 
-      userDetails.forEach(querySnapshot => {
+      userDets.forEach(querySnapshot => {
         setUserData(querySnapshot.data());
       });
+
+      const recordedDays = await firestore()
+        .collection('daysDetails')
+        .where('uid', '==', userDetails.uid)
+        .get();
+      let count = 0;
+      recordedDays.forEach(() => {
+        count += 1;
+      });
+
+      setRecDays(count);
     } catch (error) {
-      console.log(error);
-      showShortSnackBar('Something went wrong.Please try again');
+      showShortSnackBar(strings.WRONG_ALERT);
     }
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getData();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const formatDate = flag => {
     if (flag === 'high') {
@@ -120,10 +136,10 @@ const summary = ({navigation}) => {
           }>
           <Text style={portraitStyle.childTitle}>Days</Text>
           <Text style={portraitStyle.childValue}>
-            17/{formatRecordedDays()}
+            {recDays}/{formatRecordedDays()}
           </Text>
           <Text style={portraitStyle.childDetails}>
-            You have recorded 17 days since the first day
+            You have recorded {recDays} days since the first day
           </Text>
         </View>
         <View
@@ -262,4 +278,8 @@ const portraitStyle = StyleSheet.create({
   },
 });
 
-export default summary;
+const mapStateToProps = state => {
+  return {userDetails: state.userDetails};
+};
+
+export default connect(mapStateToProps)(summary);

@@ -4,31 +4,35 @@ import firestore from '@react-native-firebase/firestore';
 import HomeListItem from '../../components/homeListItem';
 import {showShortSnackBar} from '../../components/snackBar';
 import screenNames from 'App/constants/screenNames';
+import strings from 'App/constants/strings';
+import {connect} from 'react-redux';
 
-const home = ({navigation, route}) => {
+const home = ({navigation, userDetails}) => {
   const {height, width} = useWindowDimensions();
   const [dayDetails, setDayDetails] = useState([]);
-  const params = route.params;
 
   const getData = async () => {
     try {
       setDayDetails([]);
       const data = await firestore()
         .collection('daysDetails')
-        .where('uid', '==', params.uid)
+        .where('uid', '==', userDetails.uid)
         .get();
 
       data.forEach(querySnapshot => {
         setDayDetails(oldDetails => [...oldDetails, querySnapshot.data()]);
       });
     } catch (error) {
-      showShortSnackBar('Something went wrong.Please try again');
+      showShortSnackBar(strings.WRONG_ALERT);
     }
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getData();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return height > width ? (
     <FlatList
@@ -71,4 +75,8 @@ const home = ({navigation, route}) => {
   );
 };
 
-export default home;
+const mapStateToProps = state => {
+  return {userDetails: state.userDetails};
+};
+
+export default connect(mapStateToProps)(home);
