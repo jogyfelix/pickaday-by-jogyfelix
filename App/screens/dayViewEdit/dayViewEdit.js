@@ -5,14 +5,19 @@ import {
   useWindowDimensions,
   TextInput,
   StyleSheet,
+  BackHandler,
 } from 'react-native';
 import Icon from 'react-native-remix-icon';
 import HomeListItem from '../../components/homeListItem';
 import HomeListPortrait from '../../components/homeListPortrait';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import screenNames from 'App/constants/screenNames';
+import {connect} from 'react-redux';
+import {showShortSnackBar} from '../../components/snackBar';
+import strings from 'App/constants/strings';
 
-const dayViewEdit = ({route, navigation}) => {
+const dayViewEdit = ({route, navigation, userDetails}) => {
   const item = route.params.params;
 
   const [docId, setDocId] = useState('');
@@ -22,7 +27,14 @@ const dayViewEdit = ({route, navigation}) => {
     upload();
   }, []);
 
-  const updateThought = async () => {
+  const backAction = () => {
+    navigation.navigate(screenNames.home);
+    return true;
+  };
+
+  BackHandler.addEventListener('hardwareBackPress', backAction);
+
+  const updateThought = () => {
     firestore().collection('daysDetails').doc(docId).update({
       thoughts: thought,
     });
@@ -31,7 +43,7 @@ const dayViewEdit = ({route, navigation}) => {
   const upload = async () => {
     try {
       const uploadUri = item.image.replace('file://', '');
-      const reference = storage().ref(item.location + 'userName');
+      const reference = storage().ref(item.location + userDetails.email);
       await reference.putFile(uploadUri);
 
       const url = await storage()
@@ -44,11 +56,11 @@ const dayViewEdit = ({route, navigation}) => {
         location: item.location,
         temperature: item.temperature,
         thoughts: '',
-        uid: 'nFZr79ZlUlcf6z4lTwMxKY8WfTx1',
+        uid: userDetails.uid,
       });
       setDocId(uploadData._documentPath._parts[1]);
     } catch (error) {
-      console.log(error);
+      showShortSnackBar(strings.WRONG_ALERT);
     }
   };
 
@@ -129,4 +141,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default dayViewEdit;
+const mapStateToProps = state => {
+  return {userDetails: state.userDetails};
+};
+
+export default connect(mapStateToProps)(dayViewEdit);

@@ -7,4 +7,5 @@ export default {
   WRONG_ALERT: 'Something went wrong.Try again',
   ERROR_ALERT: 'Please fill in to continue',
   NETWORK_ERROR: 'No network connection',
+  FILE_NOT_AVAILABLE: 'File not available',
 };
