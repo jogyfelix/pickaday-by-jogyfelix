@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, Image, useWindowDimensions, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import colors from 'App/constants/colors';
 import Icon from 'react-native-remix-icon';
 import {format} from 'date-fns';
+import {BackButton} from 'App/styles/backButton';
 
 const dayView = ({route, navigation}) => {
   const item = route.params;
@@ -70,11 +70,12 @@ const dayView = ({route, navigation}) => {
           {item.item.thoughts}
         </Text>
       </View>
-      <TouchableOpacity
-        style={width > height ? styles.backLand : styles.backPort}
+      <BackButton
+        landScapeMode={height > width ? false : true}
+        editView={false}
         onPress={() => navigation.goBack()}>
         <Icon name="ri-arrow-left-s-line" size="20" color="white" />
-      </TouchableOpacity>
+      </BackButton>
     </View>
   );
 };
@@ -98,25 +99,6 @@ const styles = StyleSheet.create({
   locationText: {color: colors.white},
   temperatureParent: {flexDirection: 'row', position: 'absolute', right: 0},
   thoughtsParentPort: {marginVertical: 10, fontSize: 16, color: colors.white},
-  backLand: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-    elevation: 100,
-  },
-  backPort: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-  },
 });
 
 export default dayView;

@@ -15,6 +15,7 @@ import firestore from '@react-native-firebase/firestore';
 import {connect} from 'react-redux';
 import * as actions from '../../redux/actions';
 
+// eslint-disable-next-line react/prop-types
 function Login({navigation, setUserDetails}) {
   const {height, width} = useWindowDimensions();
   const [noUser, setNoUser] = useState(false);
@@ -42,7 +43,7 @@ function Login({navigation, setUserDetails}) {
         setNoUser(true);
         showShortSnackBar('Signup to continue');
       } else {
-        showShortSnackBar('Error occurred.Please try again');
+        showShortSnackBar(strings.WRONG_ALERT);
       }
     }
   };
@@ -56,7 +57,7 @@ function Login({navigation, setUserDetails}) {
 
       const currentDate = firestore.Timestamp.fromDate(new Date());
 
-      const addUserDetails = firestore().collection('Users').add({
+      firestore().collection('Users').add({
         email: user.user.email,
         uid: user.user.uid,
         date: currentDate,

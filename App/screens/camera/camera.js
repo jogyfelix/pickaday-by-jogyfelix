@@ -4,8 +4,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
-  Alert,
-  InteractionManager,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import {useCamera} from 'react-native-camera-hooks';
@@ -13,6 +11,9 @@ import Icon from 'react-native-remix-icon';
 import colors from '../../constants/colors';
 import RNFS from 'react-native-fs';
 import screenNames from 'App/constants/screenNames';
+import {BackButton} from 'App/styles/backButton';
+import {showShortSnackBar} from '../../components/snackBar';
+import strings from 'App/constants/strings';
 
 const camera = ({navigation}) => {
   const [{cameraRef}, {takePicture}] = useCamera(null);
@@ -34,7 +35,7 @@ const camera = ({navigation}) => {
         params: {path: newPath},
       });
     } catch (error) {
-      console.log(error);
+      showShortSnackBar(strings.WRONG_ALERT);
     }
   };
 
@@ -53,36 +54,18 @@ const camera = ({navigation}) => {
             <Icon name="ri-camera-switch-line" size="26" color="white" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={width > height ? styles.backLand : styles.backPort}
+        <BackButton
+          landScapeMode={height > width ? false : true}
+          editView={false}
           onPress={() => navigation.goBack()}>
           <Icon name="ri-arrow-left-s-line" size="20" color="white" />
-        </TouchableOpacity>
+        </BackButton>
       </RNCamera>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backLand: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-    elevation: 100,
-  },
-  backPort: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-  },
   parent: {flex: 1},
   subParent: {
     position: 'absolute',

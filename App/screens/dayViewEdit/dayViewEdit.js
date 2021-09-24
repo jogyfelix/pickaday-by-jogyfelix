@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   View,
-  TouchableOpacity,
   useWindowDimensions,
   TextInput,
   StyleSheet,
@@ -16,6 +15,7 @@ import screenNames from 'App/constants/screenNames';
 import {connect} from 'react-redux';
 import {showShortSnackBar} from '../../components/snackBar';
 import strings from 'App/constants/strings';
+import {BackButton} from 'App/styles/backButton';
 
 const dayViewEdit = ({route, navigation, userDetails}) => {
   const item = route.params.params;
@@ -35,15 +35,21 @@ const dayViewEdit = ({route, navigation, userDetails}) => {
   BackHandler.addEventListener('hardwareBackPress', backAction);
 
   const updateThought = () => {
-    firestore().collection('daysDetails').doc(docId).update({
-      thoughts: thought,
-    });
+    try {
+      firestore().collection('daysDetails').doc(docId).update({
+        thoughts: thought,
+      });
+    } catch (error) {
+      showShortSnackBar(strings.WRONG_ALERT);
+    }
   };
 
   const upload = async () => {
     try {
       const uploadUri = item.image.replace('file://', '');
-      const reference = storage().ref(item.location + userDetails.email);
+      const reference = storage().ref(
+        item.location + userDetails.email + Math.round(Math.random() * 1000),
+      );
       await reference.putFile(uploadUri);
 
       const url = await storage()
@@ -92,11 +98,12 @@ const dayViewEdit = ({route, navigation, userDetails}) => {
         </View>
       )}
 
-      <TouchableOpacity
-        style={width > height ? styles.backBtnLand : styles.backBtnPort}
+      <BackButton
+        landScapeMode={height > width ? false : true}
+        editView={true}
         onPress={() => navigation.goBack()}>
         <Icon name="ri-arrow-left-s-line" size="20" color="white" />
-      </TouchableOpacity>
+      </BackButton>
     </View>
   );
 };
@@ -118,26 +125,6 @@ const styles = StyleSheet.create({
   portInput: {
     marginHorizontal: 16,
     fontSize: 18,
-  },
-  backBtnLand: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-    elevation: 100,
-    position: 'absolute',
-  },
-  backBtnPort: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
   },
 });
 
