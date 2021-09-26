@@ -5,11 +5,12 @@ import HomeListItem from '../../components/homeListItem';
 import {showShortSnackBar} from '../../components/snackBar';
 import screenNames from 'App/constants/screenNames';
 import strings from 'App/constants/strings';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 
-const home = ({navigation, userDetails}) => {
+const home = ({navigation}) => {
   const {height, width} = useWindowDimensions();
   const [dayDetails, setDayDetails] = useState([]);
+  const userDetails = useSelector(state => state.userDetails);
 
   const getData = async () => {
     try {
@@ -75,8 +76,4 @@ const home = ({navigation, userDetails}) => {
   );
 };
 
-const mapStateToProps = state => {
-  return {userDetails: state.userDetails};
-};
-
-export default connect(mapStateToProps)(home);
+export default home;

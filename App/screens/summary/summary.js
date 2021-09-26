@@ -9,29 +9,30 @@ import {
   useWindowDimensions,
   Alert,
 } from 'react-native';
-import colors from '../../constants/colors';
+import {theme} from 'App/theme';
 import screenNames from '../../constants/screenNames';
 import firestore from '@react-native-firebase/firestore';
 import {showShortSnackBar} from '../../components/snackBar';
 import {format} from 'date-fns';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import strings from 'App/constants/strings';
 
-const summary = ({navigation, userDetails}) => {
+const summary = ({navigation}) => {
   const {height, width} = useWindowDimensions();
+  const userDetails = useSelector(state => state.userDetails);
   const [highestTemp, setHighestTemp] = useState({});
   const [lowestTemp, setLowestTemp] = useState({});
   const [userData, setUserData] = useState({});
   const [recDays, setRecDays] = useState(0);
 
   const logoutUser = () => {
-    Alert.alert('Logout', 'you will be logged out', [
+    Alert.alert(strings.LOGOUT, strings.WILL_LOGOUT, [
       {
-        text: 'Cancel',
+        text: strings.CANCEL,
         style: 'cancel',
       },
       {
-        text: 'OK',
+        text: strings.OK,
         onPress: () => {
           navigation.navigate(screenNames.login);
         },
@@ -174,7 +175,7 @@ const summary = ({navigation, userDetails}) => {
 };
 
 const landScapeStyle = StyleSheet.create({
-  parentView: {backgroundColor: colors.offWhite},
+  parentView: {backgroundColor: theme.colors.offWhite},
   imageTitle: {
     height: 50,
     width: 100,
@@ -187,8 +188,8 @@ const landScapeStyle = StyleSheet.create({
     width: 350,
     marginHorizontal: 16,
     marginVertical: 8,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.white,
     borderWidth: 1,
     paddingVertical: 8,
     borderRadius: 4,
@@ -197,22 +198,22 @@ const landScapeStyle = StyleSheet.create({
   childTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.grey,
+    color: theme.colors.grey,
     textAlign: 'center',
   },
   childValue: {
     fontSize: 56,
     fontWeight: 'bold',
-    color: colors.darkGrey,
+    color: theme.colors.darkGrey,
     textAlign: 'center',
   },
   childDetails: {
     fontSize: 12,
-    color: colors.grey,
+    color: theme.colors.grey,
     textAlign: 'center',
   },
   buttonStyle: {
-    borderColor: colors.appPrimary,
+    borderColor: theme.colors.appPrimary,
     borderWidth: 1,
     width: 80,
     height: 28,
@@ -221,14 +222,14 @@ const landScapeStyle = StyleSheet.create({
     marginTop: 24,
   },
   buttonText: {
-    color: colors.appPrimary,
+    color: theme.colors.appPrimary,
     textAlign: 'center',
     paddingVertical: 2,
   },
 });
 
 const portraitStyle = StyleSheet.create({
-  parentView: {flex: 1, backgroundColor: colors.offWhite},
+  parentView: {flex: 1, backgroundColor: theme.colors.offWhite},
   imageTitle: {
     height: 50,
     width: 100,
@@ -239,8 +240,8 @@ const portraitStyle = StyleSheet.create({
     height: 140,
     marginHorizontal: 16,
     marginVertical: 8,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.white,
     borderWidth: 1,
     paddingVertical: 8,
     borderRadius: 4,
@@ -248,22 +249,22 @@ const portraitStyle = StyleSheet.create({
   childTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.grey,
+    color: theme.colors.grey,
     textAlign: 'center',
   },
   childValue: {
     fontSize: 56,
     fontWeight: 'bold',
-    color: colors.darkGrey,
+    color: theme.colors.darkGrey,
     textAlign: 'center',
   },
   childDetails: {
     fontSize: 12,
-    color: colors.grey,
+    color: theme.colors.grey,
     textAlign: 'center',
   },
   buttonStyle: {
-    borderColor: colors.appPrimary,
+    borderColor: theme.colors.appPrimary,
     borderWidth: 1,
     width: 80,
     height: 28,
@@ -272,14 +273,10 @@ const portraitStyle = StyleSheet.create({
     marginTop: 24,
   },
   buttonText: {
-    color: colors.appPrimary,
+    color: theme.colors.appPrimary,
     textAlign: 'center',
     paddingVertical: 2,
   },
 });
 
-const mapStateToProps = state => {
-  return {userDetails: state.userDetails};
-};
-
-export default connect(mapStateToProps)(summary);
+export default summary;

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import colors from '../constants/colors';
 import propTypes from 'prop-types';
 
 const TouchOpacity = styled.TouchableOpacity`
@@ -10,7 +9,7 @@ const TouchOpacity = styled.TouchableOpacity`
   border-radius: 8px;
   elevation: 5;
   align-items: center;
-  background-color: ${colors.appPrimary};
+  background-color: ${props => props.theme.colors.appPrimary};
 `;
 
 const LoadingIndicator = styled.ActivityIndicator`
@@ -18,7 +17,7 @@ const LoadingIndicator = styled.ActivityIndicator`
 `;
 
 const ButtonText = styled.Text`
-  color: ${colors.white};
+  color: ${props => props.theme.colors.white};
   margin-vertical: 12px;
 `;
 

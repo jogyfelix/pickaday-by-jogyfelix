@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, Image, useWindowDimensions, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import colors from 'App/constants/colors';
+import {theme} from 'App/theme';
 import Icon from 'react-native-remix-icon';
 import {format} from 'date-fns';
+import {BackButton} from 'App/styles/backButton';
 
 const dayView = ({route, navigation}) => {
   const item = route.params;
@@ -51,7 +51,9 @@ const dayView = ({route, navigation}) => {
           <Icon name="ri-map-pin-3-line" size="18" color="white"></Icon>
           <Text style={styles.locationText}>{item.item.location}</Text>
           <View style={styles.temperatureParent}>
-            <Text style={{color: colors.white}}>{item.item.temperature}°</Text>
+            <Text style={{color: theme.colors.white}}>
+              {item.item.temperature}°
+            </Text>
             <Icon name="ri-sun-line" size="18" color="white"></Icon>
           </View>
         </View>
@@ -62,7 +64,7 @@ const dayView = ({route, navigation}) => {
                 {
                   marginVertical: 10,
                   fontSize: 16,
-                  color: colors.white,
+                  color: theme.colors.white,
                   width: width / 2.5,
                 }
               : styles.thoughtsParentPort
@@ -70,18 +72,19 @@ const dayView = ({route, navigation}) => {
           {item.item.thoughts}
         </Text>
       </View>
-      <TouchableOpacity
-        style={width > height ? styles.backLand : styles.backPort}
+      <BackButton
+        landScapeMode={height > width ? false : true}
+        editView={false}
         onPress={() => navigation.goBack()}>
         <Icon name="ri-arrow-left-s-line" size="20" color="white" />
-      </TouchableOpacity>
+      </BackButton>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   parent: {
-    backgroundColor: colors.darkBackground,
+    backgroundColor: theme.colors.darkBackground,
     flex: 1,
     flexDirection: 'row',
   },
@@ -93,29 +96,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     padding: 16,
   },
-  dateText: {color: colors.white, fontSize: 18, fontWeight: 'bold'},
+  dateText: {color: theme.colors.white, fontSize: 18, fontWeight: 'bold'},
   portSubParent: {flexDirection: 'row', flex: 1, marginTop: 4},
-  locationText: {color: colors.white},
+  locationText: {color: theme.colors.white},
   temperatureParent: {flexDirection: 'row', position: 'absolute', right: 0},
-  thoughtsParentPort: {marginVertical: 10, fontSize: 16, color: colors.white},
-  backLand: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-    elevation: 100,
-  },
-  backPort: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
+  thoughtsParentPort: {
+    marginVertical: 10,
+    fontSize: 16,
+    color: theme.colors.white,
   },
 });
 

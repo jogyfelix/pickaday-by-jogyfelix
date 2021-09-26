@@ -8,7 +8,7 @@ import {
   BackHandler,
 } from 'react-native';
 import Icon from 'react-native-remix-icon';
-import colors from '../../constants/colors';
+import {theme} from 'App/theme';
 import RNFS from 'react-native-fs';
 import {getLocation} from 'App/utils/getLocation';
 import {getLocationDetails, getweatherDetails} from '../../utils/apis';
@@ -16,6 +16,7 @@ import screenNames from 'App/constants/screenNames';
 import firestore from '@react-native-firebase/firestore';
 import {showShortSnackBar} from '../../components/snackBar';
 import strings from 'App/constants/strings';
+import {BackButton} from 'App/styles/backButton';
 
 const PictureView = ({route, navigation}) => {
   const {height, width} = useWindowDimensions();
@@ -55,10 +56,7 @@ const PictureView = ({route, navigation}) => {
     return true;
   };
 
-  const backHandler = BackHandler.addEventListener(
-    'hardwareBackPress',
-    backAction,
-  );
+  BackHandler.addEventListener('hardwareBackPress', backAction);
 
   const delteFiles = async filepath => {
     let exists = await RNFS.exists(filepath);
@@ -80,39 +78,22 @@ const PictureView = ({route, navigation}) => {
             <Icon name="ri-check-fill" size="26" color="white" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={width > height ? styles.backLand : styles.backPort}
+
+        <BackButton
+          landScapeMode={height > width ? false : true}
+          editView={false}
           onPress={() => {
             delteFiles(imageLoc);
             navigation.goBack();
           }}>
           <Icon name="ri-arrow-left-s-line" size="20" color="white" />
-        </TouchableOpacity>
+        </BackButton>
       </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backLand: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-    elevation: 100,
-  },
-  backPort: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 16,
-  },
   parent: {flex: 1},
   subParent: {
     position: 'absolute',
@@ -132,7 +113,7 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 30,
     alignSelf: 'center',
-    backgroundColor: colors.appPrimary,
+    backgroundColor: theme.colors.appPrimary,
   },
   switch: {alignSelf: 'center', marginRight: 28},
   imgParent: {flex: 1, width: '100%', height: '100%'},

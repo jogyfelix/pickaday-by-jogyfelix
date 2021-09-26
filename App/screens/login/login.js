@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useWindowDimensions, View, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import auth from '@react-native-firebase/auth';
-import colors from '../../constants/colors';
+import {theme} from 'App/theme';
 import strings from '../../constants/strings';
 import {showShortSnackBar} from '../../components/snackBar';
 import screenNames from 'App/constants/screenNames';
@@ -12,10 +12,12 @@ import {LogoText} from '../../styles/texts';
 import {LoginInput} from '../../styles/inputs';
 import {LoginButton} from '../../styles/buttons';
 import firestore from '@react-native-firebase/firestore';
-import {connect} from 'react-redux';
-import * as actions from '../../redux/actions';
+import {useDispatch} from 'react-redux';
+import actionTypes from 'App/constants/actionTypes';
 
-function Login({navigation, setUserDetails}) {
+// eslint-disable-next-line react/prop-types
+function Login({navigation}) {
+  const dispatch = useDispatch();
   const {height, width} = useWindowDimensions();
   const [noUser, setNoUser] = useState(false);
   const [userName, setUserName] = useState('');
@@ -30,7 +32,8 @@ function Login({navigation, setUserDetails}) {
     try {
       const user = await auth().signInWithEmailAndPassword(userName, password);
       const userDetail = {email: user.user.email, uid: user.user.uid};
-      setUserDetails(userDetail);
+      // setUserDetails(userDetail);
+      dispatch({type: actionTypes.SET_USER, payload: userDetail});
       navigation.push(screenNames.homeNavigator, {
         screen: screenNames.home,
       });
@@ -42,7 +45,7 @@ function Login({navigation, setUserDetails}) {
         setNoUser(true);
         showShortSnackBar('Signup to continue');
       } else {
-        showShortSnackBar('Error occurred.Please try again');
+        showShortSnackBar(strings.WRONG_ALERT);
       }
     }
   };
@@ -56,13 +59,14 @@ function Login({navigation, setUserDetails}) {
 
       const currentDate = firestore.Timestamp.fromDate(new Date());
 
-      const addUserDetails = firestore().collection('Users').add({
+      firestore().collection('Users').add({
         email: user.user.email,
         uid: user.user.uid,
         date: currentDate,
       });
       const userDetail = {email: user.user.email, uid: user.user.uid};
-      setUserDetails(userDetail);
+      // setUserDetails(userDetail);
+      dispatch({type: actionTypes.SET_USER, payload: userDetail});
       navigation.push(screenNames.homeNavigator, {
         screen: screenNames.home,
       });
@@ -70,14 +74,14 @@ function Login({navigation, setUserDetails}) {
     } catch (error) {
       setLoadingIndicator(false);
       if (error.code === 'auth/email-already-in-use') {
-        showShortSnackBar('Email already in use.');
+        showShortSnackBar(strings.EMAIL_IN_USE);
         setNoUser(false);
       }
       if (error.code === 'auth/invalid-email') {
-        showShortSnackBar('That email address is invalid!');
+        showShortSnackBar(strings.EMAIL_INVALID);
       }
       if (error.code === 'auth/weak-password') {
-        showShortSnackBar('Weak password.Please enter a strong password');
+        showShortSnackBar(strings.WEAK_PASSWORD);
       }
     }
   };
@@ -129,7 +133,7 @@ function Login({navigation, setUserDetails}) {
           landscapeMode={height > width ? false : true}
           loadingIndicator={loadingIndicator}
           size="small"
-          color={colors.white}
+          color={theme.colors.white}
           text={noUser ? strings.SIGN_UP : strings.SIGN_IN}
         />
       </LoginInputContainer>
@@ -137,4 +141,6 @@ function Login({navigation, setUserDetails}) {
   );
 }
 
-export default connect(null, actions)(Login);
+// export default connect(null, actions)(Login);
+
+export default Login;
