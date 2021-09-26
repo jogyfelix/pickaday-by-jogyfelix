@@ -8,7 +8,7 @@ import {
 import {RNCamera} from 'react-native-camera';
 import {useCamera} from 'react-native-camera-hooks';
 import Icon from 'react-native-remix-icon';
-import colors from '../../constants/colors';
+import {theme} from 'App/theme';
 import RNFS from 'react-native-fs';
 import screenNames from 'App/constants/screenNames';
 import {BackButton} from 'App/styles/backButton';
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 30,
     alignSelf: 'center',
-    backgroundColor: colors.appPrimary,
+    backgroundColor: theme.colors.appPrimary,
   },
   switch: {alignSelf: 'center', marginRight: 28},
 });

@@ -12,14 +12,14 @@ import HomeListPortrait from '../../components/homeListPortrait';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import screenNames from 'App/constants/screenNames';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {showShortSnackBar} from '../../components/snackBar';
 import strings from 'App/constants/strings';
 import {BackButton} from 'App/styles/backButton';
 
-const dayViewEdit = ({route, navigation, userDetails}) => {
+const dayViewEdit = ({route, navigation}) => {
   const item = route.params.params;
-
+  const userDetails = useSelector(state => state.userDetails);
   const [docId, setDocId] = useState('');
   const [thought, setThought] = useState('');
 
@@ -78,7 +78,7 @@ const dayViewEdit = ({route, navigation, userDetails}) => {
           <HomeListPortrait {...item} />
 
           <TextInput
-            placeholder="Type your thoughts..."
+            placeholder={strings.TYPE_THOUGHTS}
             style={styles.landInput}
           />
         </View>
@@ -87,7 +87,7 @@ const dayViewEdit = ({route, navigation, userDetails}) => {
           <HomeListItem {...item} />
 
           <TextInput
-            placeholder="Type your thoughts..."
+            placeholder={strings.TYPE_THOUGHTS}
             style={styles.portInput}
             autoCapitalize="none"
             autoCorrect={false}
@@ -128,8 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  return {userDetails: state.userDetails};
-};
-
-export default connect(mapStateToProps)(dayViewEdit);
+export default dayViewEdit;

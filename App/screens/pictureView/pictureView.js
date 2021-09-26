@@ -8,7 +8,7 @@ import {
   BackHandler,
 } from 'react-native';
 import Icon from 'react-native-remix-icon';
-import colors from '../../constants/colors';
+import {theme} from 'App/theme';
 import RNFS from 'react-native-fs';
 import {getLocation} from 'App/utils/getLocation';
 import {getLocationDetails, getweatherDetails} from '../../utils/apis';
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 30,
     alignSelf: 'center',
-    backgroundColor: colors.appPrimary,
+    backgroundColor: theme.colors.appPrimary,
   },
   switch: {alignSelf: 'center', marginRight: 28},
   imgParent: {flex: 1, width: '100%', height: '100%'},
