@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -17,11 +17,19 @@ import firestore from '@react-native-firebase/firestore';
 import {showShortSnackBar} from '../../components/snackBar';
 import strings from 'App/constants/strings';
 import {BackButton} from 'App/styles/backButton';
+import {useDispatch, useSelector} from 'react-redux';
+import {getWeatherKey} from '../../redux/actions/index';
 
 const PictureView = ({route, navigation}) => {
   const {height, width} = useWindowDimensions();
   const imageDefPath = route.params.params.path;
   const imageLoc = 'file://' + imageDefPath;
+  const weatherKeyData = useSelector(state => state.weatherApiKey);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getWeatherKey());
+  }, [dispatch]);
 
   const save = async () => {
     try {
@@ -30,9 +38,11 @@ const PictureView = ({route, navigation}) => {
         location.coords.latitude,
         location.coords.longitude,
       );
+
       const weather = await getweatherDetails(
         location.coords.latitude,
         location.coords.longitude,
+        weatherKeyData.apiKey,
       );
       const date = firestore.Timestamp.fromDate(new Date());
 
@@ -46,6 +56,7 @@ const PictureView = ({route, navigation}) => {
         },
       });
     } catch (error) {
+      console.log(error);
       showShortSnackBar(strings.WRONG_ALERT);
     }
   };

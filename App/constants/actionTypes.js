@@ -1,3 +1,5 @@
 export default {
   SET_USER: 'SET_USER',
+  SET_WEATHER_API: 'SET_WEATHER_API',
+  GET_WEATHER_API: 'GET_WEATHER_API',
 };
