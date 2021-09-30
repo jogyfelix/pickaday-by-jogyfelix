@@ -4,8 +4,11 @@ export const LoginInput = styled.TextInput.attrs(props => ({
   secureTextEntry: props.password ? true : false,
 }))`
   border-width: 1.5px;
-  border-color: ${props =>
-    props.password ? props.theme.colors.border : props.theme.colors.appPrimary};
+  /* border-color: ${props =>
+    props.onFocus
+      ? props.theme.colors.border
+      : props.theme.colors.appPrimary}; */
+  border-color: ${props => props.theme.colors.border};
   margin-top: 16px;
   height: 42px;
   width: ${props => (props.landscapeMode ? '400px' : '100%')};

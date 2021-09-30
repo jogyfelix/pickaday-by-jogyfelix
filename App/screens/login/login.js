@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {useWindowDimensions, View, StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import auth from '@react-native-firebase/auth';
@@ -23,9 +23,15 @@ function Login({navigation}) {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [loadingIndicator, setLoadingIndicator] = useState(false);
+  const userNameInputRef = useRef();
+  const passwordInputRef = useRef();
+
+  const focusUserInput = () => userNameInputRef.current.focus();
+  const focusPasswordInput = () => passwordInputRef.current.focus();
 
   useEffect(() => {
     SplashScreen.hide();
+    focusUserInput();
   }, []);
 
   const loginUser = async (userName, password) => {
@@ -100,6 +106,7 @@ function Login({navigation}) {
       <LoginInputContainer landscapeMode={height > width ? false : true}>
         <LoginInput
           autoCapitalize="none"
+          ref={userNameInputRef}
           autoCorrect={false}
           value={userName}
           onChangeText={newText => setUserName(newText)}
@@ -107,9 +114,11 @@ function Login({navigation}) {
           placeholderTextColor="gray"
           returnKeyType="next"
           landscapeMode={height > width ? false : true}
+          onSubmitEditing={focusPasswordInput}
         />
         <LoginInput
           autoCapitalize="none"
+          ref={passwordInputRef}
           autoCorrect={false}
           value={password}
           onChangeText={newText => setPassword(newText)}
